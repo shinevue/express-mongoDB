@@ -14,6 +14,7 @@ const env = require("dotenv");
 const favicon = require("serve-favicon");
 var path = require("path");
 var cors = require("cors");
+const passport = require("passport");
 
 // imports routes, middleware, and configs
 const article = require("./src/routes/articles.route");
@@ -45,16 +46,22 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+app.use(passport.initialize());
+
+require("./src/configs/passport")(passport);
+
 // sets default route
 app.get("/", (req, res) => {
   console.log("Welcome");
-  res.status(200).json({ message: "Welcome to TODO Node.js application backend." });
+  res
+    .status(200)
+    .json({ message: "Welcome to TODO Node.js application backend." });
 });
 
 // todos api routes
-app.use('/api/artctrl', article);
+app.use("/api/artctrl", article);
 // auth api routes
-app.use('/api/auth', auth);
+app.use("/api/auth", auth);
 
 // 404 - not found error handler
 app.use(notFoundRoute);
